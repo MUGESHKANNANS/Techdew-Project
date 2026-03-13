@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Hospital Appointment System</h1>
+        </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon total">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+                <h3 id="statTotal">0</h3>
+                <p>Total Appointments</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon today">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="stat-info">
+                <h3 id="statToday">0</h3>
+                <p>Today's Appointments</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon upcoming">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <h3 id="statUpcoming">0</h3>
+                <p>Upcoming Appointments</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon completed">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <h3 id="statCompleted">0</h3>
+                <p>Completed Appointments</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTROLS ROW -->
+    <section class="controls-row">
+        <!-- TAB BAR -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-filter="all">
+                <i class="fas fa-list"></i>
+                All
+            </button>
+            <button class="tab-btn" data-filter="today">
+                <i class="fas fa-calendar-day"></i>
+                Today
+            </button>
+            <button class="tab-btn" data-filter="completed">
+                <i class="fas fa-check-circle"></i>
+                Completed
+            </button>
+            <button class="tab-btn" data-filter="upcoming">
+                <i class="fas fa-clock"></i>
+                Upcoming
+            </button>
+        </div>
+
+        <!-- SEARCH & ACTIONS -->
+        <div class="search-actions">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search patient, doctor or Token ID...">
+            </div>
+            <button class="btn btn-primary" id="addAppointmentBtn">
+                <i class="fas fa-plus"></i>
+                New Appointment
+            </button>
+        </div>
+    </section>
+
+    <!-- APPOINTMENTS TABLE -->
+    <section class="glass-card">
+        <div class="table-container">
+            <table id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Token ID</th>
+                        <th class="sortable" data-sort="name">Name</th>
+                        <th class="sortable" data-sort="age">Age</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th class="sortable" data-sort="doctor">Doctor</th>
+                        <th class="sortable" data-sort="date">Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentsBody">
+                    <!-- Appointments will be inserted here -->
+                </tbody>
+            </table>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-calendar-times"></i>
+                <p>No appointments found</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- APPOINTMENT MODAL -->
+    <div class="modal-overlay" id="appointmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-calendar-plus"></i>
+                    <span id="modalTitle">New Appointment</span>
+                </h2>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="appointmentForm">
+                <input type="hidden" id="editId">
+
+                <div class="appointment-form-grid">
+                    <div class="form-group form-full-width">
+                        <label for="patientName">Patient Name *</label>
+                        <input type="text" id="patientName" required placeholder="Enter patient name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientAge">Age *</label>
+                        <input type="number" id="patientAge" required min="1" max="120" placeholder="Enter age">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientGender">Gender *</label>
+                        <select id="patientGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientPhone">Phone Number *</label>
+                        <input type="tel" id="patientPhone" required placeholder="10-digit phone number">
+                        <small id="phoneError" class="error" style="display: none;">Phone must be exactly 10 digits</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doctorName">Doctor *</label>
+                        <select id="doctorName" required>
+                            <option value="">Select Doctor</option>
+                            <option value="Dr. Arul Selvan">Dr. Arul Selvan</option>
+                            <option value="Dr. Meenakshi Sundaram">Dr. Meenakshi Sundaram</option>
+                            <option value="Dr. Karthik Raja">Dr. Karthik Raja</option>
+                            <option value="Dr. Saravanan Kumar">Dr. Saravanan Kumar</option>
+                            <option value="Dr. Anitha Lakshmi">Dr. Anitha Lakshmi</option>
+                            <option value="Dr. Muthu Karuppan">Dr. Muthu Karuppan</option>
+                            <option value="Dr. Kavitha Balaji">Dr. Kavitha Balaji</option>
+                            <option value="Dr. Senthil Nathan">Dr. Senthil Nathan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">Date *</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentTime">Time *</label>
+                        <input type="time" id="appointmentTime" required>
+                        <small id="conflictError" class="error" style="display: none;">Minimum 10-minute gap required for the same doctor</small>
+                    </div>
+
+                    <div class="form-group form-full-width">
+                        <label for="appointmentStatus">Status *</label>
+                        <select id="appointmentStatus" required>
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Waiting">Waiting</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+        <p>Dev by <a href="https://mugeshkannan.vercel.app" target="_blank">mugeshkannan</a>  @ 2026</p>
+    </footer>
+
+    <!--Script -->
+    <script src="script.js"></script>
+</body>
+</html>
