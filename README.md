@@ -1,4 +1,4 @@
-# Hospital Appointment Management System (v1.0.0)
+# Hospital Appointment Management System
 
 web application designed for efficient hospital appointment management. 
 
